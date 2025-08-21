@@ -6,6 +6,8 @@ services:
     image: postgres:15-alpine
     container_name: postgres_db
     restart: always
+    ports:
+      - "5332:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -34,17 +36,6 @@ services:
         condition: service_healthy
     environment:
       ADMINER_DEFAULT_SERVER: db
-    networks:
-      - app-network
-  # Cloudflare Tunnel Service
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflare_tunnel
-    restart: always
-    depends_on:
-      db:
-        condition: service_healthy # Wait for the database to be ready
-    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     networks:
       - app-network
 
