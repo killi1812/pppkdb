@@ -41,7 +41,8 @@ services:
     environment:
       NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
     command:
-      - "tcp"
+      - "http"
+      - "--url=adjusted-tarpon-engaging.ngrok-free.app"
       - "db:5432"
     networks:
       - app-network
