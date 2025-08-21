@@ -36,22 +36,15 @@ services:
       ADMINER_DEFAULT_SERVER: db
     networks:
       - app-network
-
-  # ngrok Service
-  ngrok:
-    image: ngrok/ngrok:latest
-    container_name: ngrok_tunnel
+  # Cloudflare Tunnel Service
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare_tunnel
     restart: always
-    ports:
-      - "4040:4040" # Access ngrok dashboard at http://localhost:4040
     depends_on:
       db:
-        condition: service_healthy
-    environment:
-      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
-    command:
-      - "tcp"
-      - "db:5432"
+        condition: service_healthy # Wait for the database to be ready
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     networks:
       - app-network
 
